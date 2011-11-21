@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Stopping the daemon before remove
+if [ -f /etc/init.d/php-java-bridge ];
+then
+	/etc/init.d/php-java-bridge stop
+fi
+
+# Removing php-java-bridge from rc.d
+/usr/sbin/update-rc.d -f php-java-bridge remove

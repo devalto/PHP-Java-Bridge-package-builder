@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+
+# Installing the daemon with updaterc.d
+/usr/sbin/update-rc.d php-java-bridge defaults
+
+# Starting the daemon after install
+if [ -f /etc/init.d/php-java-bridge ];
+then
+	/etc/init.d/php-java-bridge start
+fi

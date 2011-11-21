@@ -1,0 +1,55 @@
+#!/bin/bash
+#
+# Launcher for PHP/Java Bridge application
+
+JAVA=/usr/bin/java
+
+# Initial configuration that can be overridden in configuration file
+SOCKET="SERVLET:8080"
+LOGFILE="/var/log/php-java-bridge.log"
+LOGLEVEL=3
+USER="www-data"
+HOMEDIR="/usr/local/php-java-bridge/home"
+ARGS=""
+EXTDIRS=""
+JAR="/usr/local/java/JavaBridge.jar"
+
+# Read the default configuration file
+if [ -e /etc/php-java-bridge/php-java-bridge.conf ];
+then
+	source /etc/php-java-bridge/php-java-bridge.conf
+fi
+
+# Read the configuration file supplied in parameter
+if [ -n "$1" ];
+then
+	if [ -e $1 ];
+	then
+		source $1
+	fi
+fi
+
+# Append java.ext.dirs configuration if variable is set
+if [ ! \( -z "$EXTDIRS" -a "${EXTDIRS+xxx}" = "xxx" \) ];
+then
+	ARGS="$ARGS -Djava.ext.dirs=$EXTDIRS"
+fi
+
+if [ ! \( -z "$HOMEDIR" -a "${HOMEDIR+xxx}" = "xxx" \) ];
+then
+	ARGS="$ARGS -Duser.home=$HOMEDIR"
+fi
+
+if [ ! \( -z "$USER" -a "${USER+xxx}" = "xxx" \) ];
+then
+	JAVA="sudo -u $USER $JAVA"
+fi
+
+# Touch the log before starting the bridge
+if [ ! -f $LOGFILE ];
+then
+	sudo touch $LOGFILE
+	sudo chown $USER $LOGFILE
+fi
+
+$JAVA $ARGS -jar $JAR $SOCKET $LOGLEVEL $LOGFILE
