@@ -38,6 +38,10 @@
 		<mkdir dir="${package.build}/etc/php-java-bridge" />
 		<copy file="${package.src}/configuration/php-java-bridge.conf" todir="${package.build}/etc/php-java-bridge" />
 		
+		<mkdir dir="${package.build}/etc/php5" />
+		<mkdir dir="${package.build}/etc/php5/conf.d" />
+		<copy file="${package.src}/configuration/php/php-java-bridge.ini" todir="${package.build}/etc/php5/conf.d" />
+		
 		<!--
 		Copying executable
 		-->
