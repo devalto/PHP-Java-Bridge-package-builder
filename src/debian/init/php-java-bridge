@@ -23,6 +23,18 @@ DEAMON_ARGS="/etc/php-java-bridge/php-java-bridge.conf"
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 
+# Functions that kills the php-java-bridge process tree
+killpid() {
+	pidlist=` ps -eo ppid,pid | sed 1d | awk '{ if( $1!= $2 ) print $1"\t"$2 }' | sort | uniq `
+
+	kill "$1"
+
+	for subpid in ` echo "$pidlist" | awk -F"\t" '{ if( $1=='"$1"' ) print $2 }' `
+	do
+		killpid "$subpid" 
+	done
+}
+
 # Gracefully exit if the package has been removed.
 test -x $DAEMON || exit 0
 
@@ -39,16 +51,14 @@ d_start() {
 #	Function that stops the daemon/service.
 #
 d_stop() {
-	start-stop-daemon --stop --signal 9 --quiet --pidfile $PIDFILE \
-		|| echo -n " not running"
-}
+	
+	if [ -f "$PIDFILE" ]; then
+		killpid `cat $PIDFILE`
+		rm $PIDFILE
+	else
+		echo -n " not running"
+	fi
 
-#
-#	Function that sends a SIGHUP to the daemon/service.
-#
-d_reload() {
-	start-stop-daemon --stop --quiet --pidfile $PIDFILE \
-		--name $NAME --signal 1
 }
 
 case "$1" in
