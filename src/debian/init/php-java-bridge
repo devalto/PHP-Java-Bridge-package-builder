@@ -15,6 +15,9 @@
 
 set -e
 
+. /lib/lsb/init-functions
+test -f /etc/default/rcS && . /etc/default/rcS
+
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DESC="PHP/Java Bridge"
 NAME=php-java-bridge
@@ -44,33 +47,32 @@ test -x $DAEMON || exit 0
 d_start() {
 	start-stop-daemon --start -mb --pidfile $PIDFILE \
 		--exec $DAEMON -- $DEAMON_ARGS > /dev/null 2>&1\
-		|| echo -n " already running"
+		|| log_warning_msg " already running"
 }
 
 #
 #	Function that stops the daemon/service.
 #
 d_stop() {
-	
 	if [ -f "$PIDFILE" ]; then
 		killpid `cat $PIDFILE`
 		rm $PIDFILE
 	else
-		echo -n " not running"
+		log_warning_msg "not running (no pidfile)"
 	fi
 
 }
 
 case "$1" in
   start)
-	echo -n "Starting $DESC: $NAME"
+	log_daemon_msg "Starting $DESC: $NAME"
 	d_start
-	echo "."
+	log_end_msg 0
 	;;
   stop)
-	echo -n "Stopping $DESC: $NAME"
+	log_daemon_msg "Stopping $DESC: $NAME"
 	d_stop
-	echo "."
+	log_end_msg 0
 	;;
   restart|force-reload)
 	#
@@ -78,7 +80,7 @@ case "$1" in
 	#	option to the "reload" entry above. If not, "force-reload" is
 	#	just the same as "restart".
 	#
-	echo -n "Restarting $DESC: $NAME"
+	log_daemon_msg "Restarting $DESC: $NAME"
 	d_stop
 	# One second might not be time enough for a daemon to stop, 
 	# if this happens, d_start will fail (and dpkg will break if 
@@ -87,10 +89,10 @@ case "$1" in
 	# Notice that using --retry slows down the shutdown process somewhat.
 	sleep 1
 	d_start
-	echo "."
+	log_end_msg 0
 	;;
   *)
-	echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload}" >&2
+	log_failure_msg "Usage: $SCRIPTNAME {start|stop|restart|force-reload}"
 	exit 3
 	;;
 esac
