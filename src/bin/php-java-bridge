@@ -52,4 +52,4 @@ then
 	sudo chown $USER $LOGFILE
 fi
 
-$JAVA $ARGS -jar $JAR $SOCKET $LOGLEVEL $LOGFILE
+$JAVA $ARGS -jar $JAR $SOCKET $LOGLEVEL "" >> $LOGFILE
