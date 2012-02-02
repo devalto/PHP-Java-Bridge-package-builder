@@ -3,7 +3,7 @@ Version: @@VERSION@@
 Section: devel
 Priority: optional
 Architecture: all
-Depends: sun-java6-bin
+Depends: java-runtime-headless
 Maintainer: @@PACKAGER_NAME@@ <@@PACKAGER_EMAIL@@>
 Description: Application allowing to execute Java code in PHP
  Allows a PHP developper to execute Java code in PHP environment.
