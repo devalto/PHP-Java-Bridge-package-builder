@@ -40,16 +40,24 @@ then
 	ARGS="$ARGS -Duser.home=$HOMEDIR"
 fi
 
-if [ ! \( -z "$USER" -a "${USER+xxx}" = "xxx" \) ];
-then
-	JAVA="sudo -u $USER $JAVA"
-fi
-
 # Touch the log before starting the bridge
 if [ ! -f $LOGFILE ];
 then
 	sudo touch $LOGFILE
-	sudo chown $USER $LOGFILE
+	if [ ! \( -z "$USER" -a "${USER+xxx}" = "xxx" \) ];
+	then
+		sudo chown $USER $LOGFILE
+	fi
 fi
 
-$JAVA $ARGS -jar $JAR $SOCKET $LOGLEVEL "" >> $LOGFILE
+CMD="${JAVA} ${ARGS} -jar ${JAR} ${SOCKET} ${LOGLEVEL}"
+LOGGER="tee -a $LOGFILE"
+
+if [ ! \( -z "$USER" -a "${USER+xxx}" = "xxx" \) ];
+then
+	CMD="sudo -u $USER $CMD"
+	LOGGER="sudo -u $USER $LOGGER"
+fi
+
+echo `date +"%b %d %T"` "======================= Started PHP/Java Bridge" | $LOGGER
+eval $CMD 2>&1 | $LOGGER &> /dev/null
