@@ -1,0 +1,11 @@
+/var/log/php-java-bridge.log {
+	weekly
+	rotate 10
+	missingok
+	compress
+	delaycompress
+	nocreate
+	postrotate
+		/etc/init.d/php-java-bridge restart
+	endscript
+}

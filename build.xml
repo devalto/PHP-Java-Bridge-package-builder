@@ -41,6 +41,9 @@
 		<mkdir dir="${package.build}/etc/php5" />
 		<mkdir dir="${package.build}/etc/php5/conf.d" />
 		<copy file="${package.src}/configuration/php/php-java-bridge.ini" todir="${package.build}/etc/php5/conf.d" />
+
+		<mkdir dir="${package.build}/etc/logrotate.d" />
+		<copy file="${package.src}/configuration/logrotate/php-java-bridge" todir="${package.build}/etc/logrotate.d" />
 		
 		<!--
 		Copying executable
