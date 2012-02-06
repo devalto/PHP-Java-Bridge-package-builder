@@ -5,7 +5,7 @@
 JAVA=/usr/bin/java
 
 # Initial configuration that can be overridden in configuration file
-SOCKET="SERVLET:8080"
+SOCKET="INET:9080"
 LOGFILE="/var/log/php-java-bridge.log"
 LOGLEVEL=3
 USER="www-data"
