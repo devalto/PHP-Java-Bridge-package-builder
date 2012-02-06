@@ -1,2 +1,3 @@
 /etc/php-java-bridge/php-java-bridge.conf
 /etc/php5/conf.d/php-java-bridge.ini
+/etc/logrotate.d/php-java-bridge
